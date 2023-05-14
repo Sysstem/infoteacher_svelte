@@ -1,3 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+
+:root {
+	--green: #749020;
+	--greenActive: #588401;
+	--greenHover: #709F12;
+	--greenSemiDark: #475D1C;
+	--greenDark: #344D00;
+
+	--dark: #3d3d3d;
+}
+
+* {
+	box-sizing: border-box;
+}
+
 html, body {
 	position: relative;
 	width: 100%;
@@ -9,7 +25,7 @@ body {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-family: 'Play', sans-serif;
 }
 
 a {
@@ -70,4 +86,8 @@ button:focus {
 	max-width: 1200px;
 	margin: 0 auto;
 	padding: 0 15px;
+}
+
+.mainContainer {
+	min-height: 100%;
 }
