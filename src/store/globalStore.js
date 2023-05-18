@@ -16,6 +16,7 @@ export const pageNames = readable([
     'About',
     'Pricing',
     'Contacts',
+    'Login',
 ], set => {
     
 })

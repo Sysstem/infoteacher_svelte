@@ -7,6 +7,10 @@
 	--greenSemiDark: #475D1C;
 	--greenDark: #344D00;
 
+	--good: #67DA0E;
+
+	--bad: #DB1313;
+
 	--dark: #3d3d3d;
 }
 
@@ -86,8 +90,4 @@ button:focus {
 	max-width: 1200px;
 	margin: 0 auto;
 	padding: 0 15px;
-}
-
-.mainContainer {
-	min-height: 100%;
 }

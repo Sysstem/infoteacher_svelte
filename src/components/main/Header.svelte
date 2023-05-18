@@ -1,5 +1,6 @@
 <script>
-	import { each } from "svelte/internal";
+	import { each, onMount } from "svelte/internal";
+	import { fade } from "svelte/transition";
 	import { currentPage, pageNames, user } from "../../store/globalStore"
 
 	const pageNamesArray = $pageNames;
@@ -30,41 +31,53 @@
 		isNavOpen = false,
 		responsiveBorder = 700,
 		mobileVersion = window.innerWidth < responsiveBorder,
-		navElement;
+		navElement,
+		headerElement,
+		logoElement,
+		currentPageName = $currentPage;
+
+	onMount(() => {
+		logoElement = document.querySelector('.logo')
+	})	
+
+	currentPage.subscribe(value => {
+		currentPageName = value
+	});
+
+	$: isNavListVisible = currentPageName != 'Login'
 		
 
-		function windowResize() {
-			mobileVersion = window.innerWidth < responsiveBorder;
-			if(!mobileVersion) {
-				navElement.style.left = '0'
-				isNavOpen = true
-			} else {
-				let firstLine = document.querySelector('#firstLine'),
-					secondLine = document.querySelector('#secondLine'),
-					thirdLine = document.querySelector('#thirdLine');
-				if (isNavOpen) {
-					navElement.style.left = 'calc(100% + 35px)'
-					secondLine.style.opacity = '1'
-					firstLine.setAttribute('d', 'M5 7H15')
-					thirdLine.setAttribute('d', 'M5 17H12')
-					firstLine.style.transform = 'rotate(0deg)'
-					thirdLine.style.transform = 'rotate(0deg)'
-					isNavOpen = false
-				} /* else {
-					navElement.style.left = '-15px'
-					secondLine.style.opacity = '0'
-					firstLine.setAttribute('d', 'M5 7H20')
-					thirdLine.setAttribute('d', 'M5 17H20')
-					firstLine.style.transform = 'rotate(45deg)'
-					thirdLine.style.transform = 'rotate(-45deg)'
-				} */
-			}
+	function windowResize() {
+		mobileVersion = window.innerWidth < responsiveBorder;
+		if (!isNavListVisible) {
+			const headerWidth = headerElement.clientWidth,
+				paddingOffset = parseFloat(window.getComputedStyle(headerElement).getPropertyValue('padding-left'));
+			logoElement.style.transform = `translateX(${headerWidth/2 - logoElement.clientWidth/2 - paddingOffset}px)`
 
+			return
 		}
-		window.onresize = windowResize
+		if(!mobileVersion) {
+			navElement.style.left = '0'
+			isNavOpen = true
+		} else {
+			let firstLine = document.querySelector('#firstLine'),
+				secondLine = document.querySelector('#secondLine'),
+				thirdLine = document.querySelector('#thirdLine');
+			if (isNavOpen) {
+				navElement.style.left = 'calc(100% + 35px)'
+				secondLine.style.opacity = '1'
+				firstLine.setAttribute('d', 'M5 7H15')
+				thirdLine.setAttribute('d', 'M5 17H12')
+				firstLine.style.transform = 'rotate(0deg)'
+				thirdLine.style.transform = 'rotate(0deg)'
+				isNavOpen = false
+			}
+		}
+	}
+	window.onresize = windowResize
 
 
-	function navClickHandle(pageName) {
+	function changePage(pageName) {
 		if(!pageName) {
 			console.warn('Error: pageName is undefined')
 			return
@@ -77,7 +90,17 @@
 	}
 
 	function goToLoginPage() {
-		console.log('goToLoginPage')
+		changePage('Login')
+		const headerWidth = headerElement.clientWidth,
+			paddingOffset = parseFloat(window.getComputedStyle(headerElement).getPropertyValue('padding-left'));
+			
+		logoElement.style.transform = `translateX(${headerWidth/2 - logoElement.clientWidth/2 - paddingOffset}px)`
+	}
+
+	function onLogoClick() {
+		changePage(!!$user ? 'Main' : 'Preview')
+			
+		logoElement.style.transform = ``
 	}
 
 	function onNavBurgerClick() {
@@ -106,42 +129,57 @@
 
 
 <div class="wrapper">
-	<div class="header">
-		<div class="logo" on:click={navClickHandle(!!$user ? 'Main' : 'Preview')} on:keyup={navClickHandle(!!$user ? 'Main' : 'Preview')}>
+	<div class="header" bind:this={headerElement}>
+		<div class="logo" 
+			on:click={onLogoClick} 
+			on:keyup={onLogoClick}
+		>
 			<img class="logoSvg" src={logoPath} alt="Logo">
 		</div>
-		<nav class="nav" bind:this={navElement}>
-			<ul class="navList">
-				{#each navItems as item, index (item.id)}
-					<li class={'navItem ' + (item.pageName == $currentPage ? 'chosen' : '')} 
-						on:click={() => navClickHandle(item.pageName)} on:keyup={() => navClickHandle(item.pageName)}
-					>
-						{item.title}
-					</li>
-				{/each}
-			</ul>
-		</nav>
 
-		{#if !$user}
-			<div class="loginBtn" on:click={goToLoginPage} on:keyup={goToLoginPage}>
-				<img src="./assets/svg/profile.svg" alt="">
-				<p>Вход / <br>Регистрация</p>
+		{#if currentPageName != 'Login'}
+			<nav transition:fade class="nav" bind:this={navElement}>
+				<ul class="navList">
+					{#each navItems as item, index (item.id)}
+						<li class={'navItem ' + (item.pageName == currentPageName ? 'chosen' : '')} 
+							on:click={() => {changePage(item.pageName); if(mobileVersion) onNavBurgerClick()}}
+							on:keyup={() => {changePage(item.pageName); if(mobileVersion) onNavBurgerClick()}}
+						>
+							{item.title}
+						</li>
+					{/each}
+				</ul>
+			</nav>
+		{/if}
+		{#if !$user && currentPageName != 'Login'}
+			<div transition:fade class="loginBtn" on:click={goToLoginPage} on:keyup={goToLoginPage}>
+				<svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path class="path" stroke="#292D32" opacity="0.4" d="M12.1605 10.87C12.0605 10.86 11.9405 10.86 11.8305 10.87C9.45055 10.79 7.56055 8.84 7.56055 6.44C7.56055 3.99 9.54055 2 12.0005 2C14.4505 2 16.4405 3.99 16.4405 6.44C16.4305 8.84 14.5405 10.79 12.1605 10.87Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+					<path class="path" stroke="#292D32" d="M7.1607 14.56C4.7407 16.18 4.7407 18.82 7.1607 20.43C9.9107 22.27 14.4207 22.27 17.1707 20.43C19.5907 18.81 19.5907 16.17 17.1707 14.56C14.4307 12.73 9.9207 12.73 7.1607 14.56Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+				{#if !mobileVersion}
+					<p>Вход / <br>Регистрация</p>
+				{/if}
 			</div>
 		{/if}
-		<div class="showNavBtn" on:click={onNavBurgerClick} on:keyup={onNavBurgerClick}>
-			<!-- <img width="40" src="./assets/svg/burger.svg" alt="Burger"> -->
-			<svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path id="firstLine" class="burgerLine" d="M5 7H15" stroke="#3d3d3d" stroke-width="2" stroke-linecap="round"/>
-				<path id="secondLine" class="burgerLine" d="M5 12H18" stroke="#3d3d3d" stroke-width="2" stroke-linecap="round"/>
-				<path id="thirdLine" class="burgerLine" d="M5 17H12" stroke="#3d3d3d" stroke-width="2" stroke-linecap="round"/>
-			</svg>
-		</div>
-		
+		{#if currentPageName != 'Login'}
+			<div transition:fade class="showNavBtn" on:click={onNavBurgerClick} on:keyup={onNavBurgerClick}>
+				<!-- <img width="40" src="./assets/svg/burger.svg" alt="Burger"> -->
+				<svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path id="firstLine" class="burgerLine" d="M5 7H15" stroke="#3d3d3d" stroke-width="2" stroke-linecap="round"/>
+					<path id="secondLine" class="burgerLine" d="M5 12H18" stroke="#3d3d3d" stroke-width="2" stroke-linecap="round"/>
+					<path id="thirdLine" class="burgerLine" d="M5 17H12" stroke="#3d3d3d" stroke-width="2" stroke-linecap="round"/>
+				</svg>
+			</div>
+		{/if}
 	</div>
 </div>
 
 
 <style>
+	.path {
+		transition: stroke .3s ease;
+	}
 	.burgerLine {
 		transition: all .3s ease;
 		transform-origin: 50% 50%;
@@ -161,13 +199,17 @@
 		align-items: center;
 		gap: 10px;
 		padding: 5px 10px;
-	}
-	.loginBtn img, .loginBtnMobile img {
-		width: 25px;
-	}
+		cursor: pointer;
 
+		transition: background-color .3s ease, color .3s ease;
+	}
+	.loginBtn:hover .path {
+		background-color: var(--dark);
+		stroke: #FFFFFF;
+	}
 	.loginBtn:hover {
-
+		background-color: var(--dark);
+		color: #FFFFFF;
 	}
 
 	.wrapper {
@@ -186,6 +228,8 @@
 
 	.logo {
 		cursor: pointer;
+
+		transition: transform .5s ease-in-out;
 	}
 
 	.logoSvg {
@@ -279,11 +323,12 @@
 			flex-direction: column;
 			gap: 20px;
 			margin-top: 80px;
+			padding: 0 20px;
 		}
 	}
 	@media screen and (max-width: 420px) {
 		.header {
-			padding: 20px 0;
+			padding: 20px;
 		}
 	}
 	

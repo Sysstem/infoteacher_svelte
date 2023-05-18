@@ -3,10 +3,12 @@
 	import About from "./pages/About.svelte";
 	import Pricing from "./pages/Pricing.svelte";
 	import Contacts from "./pages/Contacts.svelte";
+	import { fly, fade } from "svelte/transition";
 	import { onDestroy } from "svelte";
 	import { currentPage } from "./store/globalStore";
 	import { pageNames } from "./store/globalStore";
-  import Header from "./components/main/Header.svelte";
+  	import Header from "./components/main/Header.svelte";
+  	import Login from "./pages/Login.svelte";
 
 	let currentPageName = ''
 	const pageNamesArray = $pageNames
@@ -23,20 +25,35 @@
 </script>
 
 <main>
-	<div class="container mainContainer">
+	<div class="mainContainer">
 		<Header/>
-		{#if currentPageName == pageNamesArray[1]}
-			<Preview />
-		{/if}
-		{#if currentPageName == pageNamesArray[2]}
-			<About />
-		{/if}
-		{#if currentPageName == pageNamesArray[3]}
-			<Pricing />
-		{/if}
-		{#if currentPageName == pageNamesArray[4]}
-			<Contacts />
-		{/if}
+		<div class="pageWrapper">
+			{#if currentPageName == pageNamesArray[1]}
+				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
+					<Preview />
+				</section>
+			{/if}
+			{#if currentPageName == pageNamesArray[2]}
+				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
+					<About />
+				</section>
+			{/if}
+			{#if currentPageName == pageNamesArray[3]}
+				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
+					<Pricing />
+				</section>
+			{/if}
+			{#if currentPageName == pageNamesArray[4]}
+				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
+					<Contacts />
+				</section>
+			{/if}
+			{#if currentPageName == pageNamesArray[5]}
+				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
+					<Login />
+				</section>
+			{/if}
+		</div>
 	</div>
 </main>
 
@@ -46,5 +63,23 @@
 		width: 100%;
 		overflow-x: hidden;
 		overflow-y: auto;
+	}
+	.mainContainer {
+		position: relative;
+		height: 100%;
+		max-width: 1200px;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+	.pageWrapper {
+		position: relative;
+		width: 100%;
+		flex-grow: 1;
+	}
+	.pageWrapperS {
+		position: absolute;
+		inset: 0;
 	}
 </style>
