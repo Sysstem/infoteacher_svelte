@@ -3,9 +3,9 @@
     import { currentPage } from '../store/globalStore';
 
     
-    const pageName = 'Preview'
+    const pageName = 'Preview';
 
-    if ($currentPage != pageName) currentPage.set(pageName)
+    localStorage.setItem('requestPage', pageName)
 
 </script>
 

@@ -8,6 +8,7 @@ import { writable, derived, readable } from 'svelte/store';
         About: О сервисе
         Pricing: Цены
         Contacts: Контакты
+        Login: Вход
 */
 
 export const pageNames = readable([
@@ -17,6 +18,7 @@ export const pageNames = readable([
     'Pricing',
     'Contacts',
     'Login',
+    'Profile',
 ], set => {
     
 })
@@ -24,4 +26,18 @@ export const pageNames = readable([
 export const currentPage = writable("");
 
 export const user = writable(null);
+export const testUserT = writable({
+    id: 0,
+    email: 'test@testmail.ru',
+    name: 'Тест',
+    surname: 'Тестов',
+    category: 'teacher',
+});
+export const testUserS = writable({
+    id: 1,
+    email: 'test@testmail.ru',
+    name: 'Тест',
+    surname: 'Тестов',
+    category: 'student',
+});
 

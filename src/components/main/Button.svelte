@@ -1,24 +1,26 @@
 <script>
+    import LoadingSpinner from "./LoadingSpinner.svelte";
+    import { createEventDispatcher } from "svelte";
 
     export let name = "Кнопка"
     export let loading = false
+    export let disabled = false
+
+    let dispatch = createEventDispatcher()
 
     function onBtnClick() {
-        loading = true
-        setTimeout(() => {
-            loading = false
-        }, 2000)
+        dispatch('btnclick')
     }
 
 </script>
 
 
-<button class="button" on:click={onBtnClick}>
+<button class="button" disabled='{disabled || loading}' on:click={onBtnClick}>
     <div class="btnText">
         {#if !loading}
             {name}
         {:else}
-            <img width="22" src="./assets/img/loading2.gif" alt="">
+            <LoadingSpinner />
         {/if}
     </div>
 
@@ -34,8 +36,23 @@
         border: 1px solid var(--dark);
         border-radius: 15px;
         padding: 10px 20px;
+
+        transition: all .2s ease;
+    }
+    .button:hover {
+        background-color: var(--dark);
+        color: #fff;
+    }
+    .button:active {
+        background-color: var(--semidark);
+    }
+    .button:disabled {
+        background-color: #fff;
+        color: #ccc;
+        border: 1px solid #ccc;
     }
     .btnText {
+        position: relative;
         height: 22px;
         line-height: 22px;
         font-size: 1.2rem;

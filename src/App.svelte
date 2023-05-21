@@ -9,11 +9,26 @@
 	import { pageNames } from "./store/globalStore";
   	import Header from "./components/main/Header.svelte";
   	import Login from "./pages/Login.svelte";
+	import Profile from "./pages/Profile.svelte";
+	import Main from "./pages/Main.svelte"
+	import { user } from "./store/globalStore";
 
-	let currentPageName = ''
+
 	const pageNamesArray = $pageNames
 
-	currentPage.set(pageNamesArray[1])
+	let currentPageName = '',
+		testUser = localStorage.getItem('testUser'),
+		requestPage = localStorage.getItem('requestPage');
+
+	if(testUser) {
+		user.set(JSON.parse(testUser))
+		if(!requestPage) requestPage = 'Main'
+	} else {
+		if(!requestPage) requestPage = 'Preview'
+	}
+
+	currentPage.set(requestPage)
+	
 	const unsubscribeCurrentPage = currentPage.subscribe(value => {
 		currentPageName = value
 	});
@@ -26,11 +41,16 @@
 
 <main>
 	<div class="mainContainer">
-		<Header/>
+		<Header />
 		<div class="pageWrapper">
 			{#if currentPageName == pageNamesArray[1]}
 				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
 					<Preview />
+				</section>
+			{/if}
+			{#if currentPageName == pageNamesArray[0]}
+				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
+					<Main />
 				</section>
 			{/if}
 			{#if currentPageName == pageNamesArray[2]}
@@ -51,6 +71,11 @@
 			{#if currentPageName == pageNamesArray[5]}
 				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
 					<Login />
+				</section>
+			{/if}
+			{#if currentPageName == pageNamesArray[6]}
+				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
+					<Profile />
 				</section>
 			{/if}
 		</div>

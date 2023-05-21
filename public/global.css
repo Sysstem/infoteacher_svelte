@@ -9,13 +9,17 @@
 
 	--good: #67DA0E;
 
-	--bad: #DB1313;
+	--bad: #ff0404;
 
 	--dark: #3d3d3d;
+	--semidark: #5d5d5d;
+	--lightGray: #dddddd;
 }
 
 * {
 	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
 }
 
 html, body {

@@ -3,6 +3,9 @@
 	import { fade } from "svelte/transition";
 	import { currentPage, pageNames, user } from "../../store/globalStore"
 
+	export let logoElementTransform = 0;
+
+
 	const pageNamesArray = $pageNames;
 
 	let navItems = [
@@ -52,7 +55,7 @@
 		if (!isNavListVisible) {
 			const headerWidth = headerElement.clientWidth,
 				paddingOffset = parseFloat(window.getComputedStyle(headerElement).getPropertyValue('padding-left'));
-			logoElement.style.transform = `translateX(${headerWidth/2 - logoElement.clientWidth/2 - paddingOffset}px)`
+			logoElementTransform = headerWidth/2 - logoElement.clientWidth/2 - paddingOffset
 
 			return
 		}
@@ -91,16 +94,32 @@
 
 	function goToLoginPage() {
 		changePage('Login')
-		const headerWidth = headerElement.clientWidth,
-			paddingOffset = parseFloat(window.getComputedStyle(headerElement).getPropertyValue('padding-left'));
-			
-		logoElement.style.transform = `translateX(${headerWidth/2 - logoElement.clientWidth/2 - paddingOffset}px)`
+		if(!logoElementTransform) {
+			const headerWidth = headerElement.clientWidth,
+				paddingOffset = parseFloat(window.getComputedStyle(headerElement).getPropertyValue('padding-left'));
+				
+			logoElementTransform = headerWidth/2 - logoElement.clientWidth/2 - paddingOffset
+		}
+		
+	}
+	function goToProfilePage() {
+		if(currentPageName != 'Profile')
+			changePage('Profile')
+		else
+			changePage('Main')
+	}
+
+	function loginBtnClick() {
+		if(!$user) {
+			goToLoginPage() 
+		}
+		else {
+			goToProfilePage()
+		}
 	}
 
 	function onLogoClick() {
 		changePage(!!$user ? 'Main' : 'Preview')
-			
-		logoElement.style.transform = ``
 	}
 
 	function onNavBurgerClick() {
@@ -125,12 +144,15 @@
 		}
 		isNavOpen = !isNavOpen
 	}
+	
+	$: calculateLogoPos = currentPageName != 'Login' ? 0 : logoElementTransform;
 </script>
 
 
 <div class="wrapper">
 	<div class="header" bind:this={headerElement}>
 		<div class="logo" 
+			style="transform: translateX({calculateLogoPos}px)"
 			on:click={onLogoClick} 
 			on:keyup={onLogoClick}
 		>
@@ -151,14 +173,19 @@
 				</ul>
 			</nav>
 		{/if}
-		{#if !$user && currentPageName != 'Login'}
-			<div transition:fade class="loginBtn" on:click={goToLoginPage} on:keyup={goToLoginPage}>
+		{#if currentPageName != 'Login'}
+			<div transition:fade class="loginBtn {currentPageName == 'Profile' ? 'loginBtnProfile' : ''}" on:click={loginBtnClick} on:keyup={loginBtnClick}>
 				<svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<path class="path" stroke="#292D32" opacity="0.4" d="M12.1605 10.87C12.0605 10.86 11.9405 10.86 11.8305 10.87C9.45055 10.79 7.56055 8.84 7.56055 6.44C7.56055 3.99 9.54055 2 12.0005 2C14.4505 2 16.4405 3.99 16.4405 6.44C16.4305 8.84 14.5405 10.79 12.1605 10.87Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-					<path class="path" stroke="#292D32" d="M7.1607 14.56C4.7407 16.18 4.7407 18.82 7.1607 20.43C9.9107 22.27 14.4207 22.27 17.1707 20.43C19.5907 18.81 19.5907 16.17 17.1707 14.56C14.4307 12.73 9.9207 12.73 7.1607 14.56Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+					<path class="path {currentPageName == 'Profile' ? 'loginBtnSvgProfile' : ''}" stroke="#292D32" opacity="0.4" d="M12.1605 10.87C12.0605 10.86 11.9405 10.86 11.8305 10.87C9.45055 10.79 7.56055 8.84 7.56055 6.44C7.56055 3.99 9.54055 2 12.0005 2C14.4505 2 16.4405 3.99 16.4405 6.44C16.4305 8.84 14.5405 10.79 12.1605 10.87Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+					<path class="path {currentPageName == 'Profile' ? 'loginBtnSvgProfile' : ''}" stroke="#292D32" d="M7.1607 14.56C4.7407 16.18 4.7407 18.82 7.1607 20.43C9.9107 22.27 14.4207 22.27 17.1707 20.43C19.5907 18.81 19.5907 16.17 17.1707 14.56C14.4307 12.73 9.9207 12.73 7.1607 14.56Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 				</svg>
 				{#if !mobileVersion}
-					<p>Вход / <br>Регистрация</p>
+					{#if $user}
+						<p>Профиль</p>
+					{:else}
+						<p>Вход / <br>Регистрация</p>
+					{/if}	
+				
 				{/if}
 			</div>
 		{/if}
@@ -203,13 +230,30 @@
 
 		transition: background-color .3s ease, color .3s ease;
 	}
-	.loginBtn:hover .path {
-		background-color: var(--dark);
-		stroke: #FFFFFF;
+	@media(hover: hover) {
+		.loginBtn:hover .path {
+			background-color: var(--dark);
+			stroke: #FFFFFF;
+		}
+		.loginBtn:hover {
+			background-color: var(--dark);
+			color: #FFFFFF;
+		}
+		.navItem:hover:after {
+			width: 100%;
+			left: 0;
+			-webkit-box-shadow: 0px 11px 66px 9px rgba(112, 159, 18, 0.2);
+			-moz-box-shadow: 0px 11px 66px 9px rgba(112, 159, 18, 0.2);
+			box-shadow: 0px 11px 66px 9px rgba(112, 159, 18, 0.3);
+		}
 	}
-	.loginBtn:hover {
+	
+	.loginBtnProfile {
 		background-color: var(--dark);
 		color: #FFFFFF;
+	}
+	.loginBtnSvgProfile {
+		stroke: #FFFFFF;
 	}
 
 	.wrapper {
@@ -280,14 +324,6 @@
 		box-shadow: none;
 
 		transition: width .3s ease, left .3s ease, box-shadow 0.3s ease; /*задаём время анимации*/
-	}
-
-	.navItem:hover:after {
-		width: 100%;
-		left: 0;
-		-webkit-box-shadow: 0px 11px 66px 9px rgba(112, 159, 18, 0.2);
-		-moz-box-shadow: 0px 11px 66px 9px rgba(112, 159, 18, 0.2);
-		box-shadow: 0px 11px 66px 9px rgba(112, 159, 18, 0.3);
 	}
 
 	.chosen:after {
