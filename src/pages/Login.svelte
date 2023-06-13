@@ -5,7 +5,10 @@
     import { onMount, onDestroy, createEventDispatcher } from "svelte/internal";
 
     const loginRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        minPasswordLength = 3;
+        minPasswordLength = 3,
+        pageName = 'Login';
+
+    //localStorage.setItem('requestPage', pageName)
 
     let buttonDisabled = true,
         loginValue,

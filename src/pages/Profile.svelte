@@ -60,6 +60,7 @@
         title={'Выход'}
         color={'var(--bad)'}
         confirmData={confirmData}
+        on:modalconfirm={exitFromAccount}
     />
 </div>
 

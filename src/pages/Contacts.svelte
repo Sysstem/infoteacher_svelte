@@ -1,19 +1,24 @@
 <script>
-    import Header from '../components/main/Header.svelte'
-    import { currentPage } from '../store/globalStore';
+
+    import { testUserT } from "../store/globalStore";
 
     const pageName = 'Contacts'
-
-    if ($currentPage != pageName) currentPage.set(pageName)
 
 </script>
 
 
-<div>
-    This is Contacts Page
+<div class="wrapper">
+    This is {pageName} Page
+    <br><br>
+    email: {$testUserT.email}
+    <br><br>
+    name: {$testUserT.name}
 </div>
 
 
 <style>
-
+    .wrapper {
+        padding: 20px;
+        font-size: 2.5rem
+    }
 </style>

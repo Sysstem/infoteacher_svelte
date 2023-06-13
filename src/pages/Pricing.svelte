@@ -1,20 +1,21 @@
 <script>
-    import Header from '../components/main/Header.svelte'
-    import { currentPage } from '../store/globalStore';
 
     
     const pageName = 'Pricing'
 
-    if ($currentPage != pageName) currentPage.set(pageName)
+    localStorage.setItem('requestPage', pageName)
 
 </script>
 
 
-<div>
-    This is Pricing Page
+<div class="wrapper">
+    This is {pageName} Page
 </div>
 
 
 <style>
-
+    .wrapper {
+        padding: 20px;
+        font-size: 2.5rem
+    }
 </style>

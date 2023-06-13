@@ -1,5 +1,4 @@
 <script>
-    import Header from '../components/main/Header.svelte'
     import { currentPage, user } from '../store/globalStore';
 
     
@@ -16,7 +15,7 @@
 
 <div class="wrapper">
     <h2>Добро пожаловать, {$user?.name}</h2>
-    This is Main Page
+    This is {pageName} Page
 </div>
 
 

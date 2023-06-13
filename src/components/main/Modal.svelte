@@ -2,6 +2,7 @@
 
     import { fade, fly } from "svelte/transition";
     import { cubicOut, cubicIn } from 'svelte/easing'
+    import { createEventDispatcher } from 'svelte';
 
 
     export let modalData = {
@@ -13,6 +14,8 @@
     export let visibilityChange = null
     export let visibility = null
 
+    const dispatch = createEventDispatcher();
+
     function closeThis() {
         visibilityChange()
     }
@@ -21,6 +24,7 @@
         closeThis()
     }
     function confirmClick() {
+        dispatch('modalconfirm', {text: 'msg'})
         console.log('confirm')
         closeThis()
     }

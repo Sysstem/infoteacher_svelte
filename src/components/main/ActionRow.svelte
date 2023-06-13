@@ -49,6 +49,7 @@
     modalData={confirmData}
     visibilityChange={showConfirmModal}
     visibility={isModalVisible}
+    on:modalconfirm
 />
 
 
