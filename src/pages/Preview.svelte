@@ -3,8 +3,6 @@
     
     const pageName = 'Preview';
 
-    localStorage.setItem('requestPage', pageName)
-
 </script>
 
 

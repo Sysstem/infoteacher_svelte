@@ -1,7 +1,7 @@
 <script>
 	import { each, onMount } from "svelte/internal";
 	import { fade } from "svelte/transition";
-	import { currentPage, pageNames, user } from "../../store/globalStore"
+	import { currentPage, pageNames, user, previousPage, goToPage } from "../../store/globalStore"
 
 	export let logoElementTransform = 0;
 
@@ -79,21 +79,8 @@
 	}
 	window.onresize = windowResize
 
-
-	function changePage(pageName) {
-		if(!pageName) {
-			console.warn('Error: pageName is undefined')
-			return
-		}
-		if(pageNamesArray.includes(pageName)) {
-			currentPage.set(pageName)
-		} else {
-			console.warn(`Error: ${pageName} is invalid pageName`)
-		}
-	}
-
 	function goToLoginPage() {
-		changePage('Login')
+		goToPage('Login')
 		if(!logoElementTransform) {
 			const headerWidth = headerElement.clientWidth,
 				paddingOffset = parseFloat(window.getComputedStyle(headerElement).getPropertyValue('padding-left'));
@@ -104,9 +91,9 @@
 	}
 	function goToProfilePage() {
 		if(currentPageName != 'Profile')
-			changePage('Profile')
+			goToPage('Profile')
 		else
-			changePage('Main')
+			goToPage($previousPage || 'Main')
 	}
 
 	function loginBtnClick() {
@@ -119,7 +106,7 @@
 	}
 
 	function onLogoClick() {
-		changePage(!!$user ? 'Main' : 'Preview')
+		goToPage(!!$user ? 'Main' : 'Preview')
 	}
 
 	function onNavBurgerClick() {
@@ -127,7 +114,7 @@
 			secondLine = document.querySelector('#secondLine'),
 			thirdLine = document.querySelector('#thirdLine');
 		if (isNavOpen) {
-			navElement.style.left = 'calc(100% + 35px)'
+			navElement.style.left = 'calc(100%)'
 			secondLine.style.opacity = '1'
 			firstLine.setAttribute('d', 'M5 7H15')
 			thirdLine.setAttribute('d', 'M5 17H12')
@@ -135,7 +122,7 @@
 			thirdLine.style.transform = 'rotate(0deg)'
 
 		} else {
-			navElement.style.left = '-15px'
+			navElement.style.left = '0'
 			secondLine.style.opacity = '0'
 			firstLine.setAttribute('d', 'M5 7H20')
 			thirdLine.setAttribute('d', 'M5 17H20')
@@ -164,13 +151,27 @@
 				<ul class="navList">
 					{#each navItems as item, index (item.id)}
 						<li class={'navItem ' + (item.pageName == currentPageName ? 'chosen' : '')} 
-							on:click={() => {changePage(item.pageName); if(mobileVersion) onNavBurgerClick()}}
-							on:keyup={() => {changePage(item.pageName); if(mobileVersion) onNavBurgerClick()}}
+							on:click={() => {goToPage(item.pageName); if(mobileVersion) onNavBurgerClick()}}
+							on:keyup={() => {goToPage(item.pageName); if(mobileVersion) onNavBurgerClick()}}
 						>
 							{item.title}
 						</li>
 					{/each}
 				</ul>
+				{#if mobileVersion}
+					<div class="navSidebarInfoBlock">
+						<img class="logoSvgNav" src={logoPath} alt="Logo">
+						<div class="linksBlock">
+							<a href="https://vk.com" class="socialLink">
+								<img class="socialLinkSvg" src="./assets/svg/vk.svg" alt="VK">
+							</a>
+							<a href="https://vk.com" class="socialLink">
+								<img class="socialLinkSvg" src="./assets/svg/phone2.svg" alt="Phone">
+							</a>
+							
+						</div>
+					</div>
+				{/if}
 			</nav>
 		{/if}
 		{#if currentPageName != 'Login'}
@@ -275,9 +276,11 @@
 
 		transition: transform .5s ease-in-out;
 	}
-
 	.logoSvg {
 		max-height: 80px;
+	}
+	.logoSvgNav {
+		max-height: 160px;
 	}
 
 	.nav {
@@ -286,8 +289,37 @@
 		min-width: 60%;
 		padding: 0 20px;
 		user-select: none;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
 
 		transition: left .4s ease-in-out;
+	}
+	.navSidebarInfoBlock {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		gap: 60px;
+	}
+	.linksBlock {
+		width: 100%;
+		display: flex;
+		gap: 15px;
+		justify-content: center;
+	}
+	.socialLink {
+		border-radius: 50%;
+		width: 45px;
+		height: 45px;
+		border: 1px solid var(--dark);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.socialLinkSvg {
+		width: 30px;
 	}
 
 	.showNavBtn {
@@ -299,6 +331,7 @@
 
 	.navList {
 		list-style: none;
+		width: 100%;
 		display: flex;
 		justify-content: space-between;
 		padding-inline-start: 0;
@@ -344,9 +377,12 @@
 			left: calc(100% + 35px);
 			top: 0;
 			height: 100vh;
-			background-color: transparent;
+			background-color: rgba(255, 255, 255, 0.3);
 			backdrop-filter: blur(10px);
-			padding: 15px;
+			padding: 15px 15px 40px 15px;
+		}
+		.navItem {
+			font-size: 1.3rem;
 		}
 		.showNavBtn {
 			display: flex;

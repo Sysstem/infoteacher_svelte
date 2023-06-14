@@ -3,8 +3,6 @@
     
     const pageName = 'Pricing'
 
-    localStorage.setItem('requestPage', pageName)
-
 </script>
 
 

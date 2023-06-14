@@ -4,7 +4,6 @@
     
     const pageName = 'About'
 
-    localStorage.setItem('requestPage', pageName)
 
 </script>
 

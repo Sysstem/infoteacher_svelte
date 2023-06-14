@@ -96,9 +96,6 @@
         position: relative;
         padding: 20px;
     }
-    .text {
-
-    }
     .buttons {
         display: flex;
         width: 100%;

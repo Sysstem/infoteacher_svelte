@@ -8,8 +8,6 @@
     
     const pageName = 'Profile';
 
-    localStorage.setItem('requestPage', pageName)
-
     let exit = false,
         confirmData = {
             title: 'Выход из аккаунта',
