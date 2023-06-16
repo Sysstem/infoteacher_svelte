@@ -201,10 +201,40 @@
 			</div>
 		{/if}
 	</div>
+	<div class="bottomGrad">
+
+	</div>
 </div>
 
 
 <style>
+
+	.wrapper {
+		width: 100%;
+		z-index: 15;
+		position: relative;
+	}
+
+	.header {
+		position: relative;
+		width: 100%;
+		padding: 20px 20px 0 20px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		z-index: 10;
+	}
+
+	.bottomGrad {
+		position: absolute;
+		bottom: -20px;
+		left: 0;
+		height: 20px;
+		width: 100%;
+		background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+
+		z-index: 5;
+	}
 	.path {
 		transition: stroke .3s ease;
 	}
@@ -256,21 +286,6 @@
 	.loginBtnSvgProfile {
 		stroke: #FFFFFF;
 	}
-
-	.wrapper {
-		width: 100%;
-		z-index: 15;
-	}
-
-	.header {
-		position: relative;
-		width: 100%;
-		padding: 20px;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-
 	.logo {
 		cursor: pointer;
 
@@ -400,7 +415,7 @@
 	}
 	@media screen and (max-width: 420px) {
 		.header {
-			padding: 20px;
+			padding: 20px 20px 0 20px;
 		}
 	}
 	

@@ -106,5 +106,6 @@
 	.pageWrapperS {
 		position: absolute;
 		inset: 0;
+		overflow-y: auto
 	}
 </style>
