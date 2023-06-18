@@ -46,7 +46,9 @@
                 <p class="text">{modalData.info}</p>
             </div>
             <div class="buttons">
-                <div class="button cancel" on:click={cancelClick} on:keyup={cancelClick}>{modalData.cancel}</div>
+                {#if modalData.cancel}
+                    <div class="button cancel" on:click={cancelClick} on:keyup={cancelClick}>{modalData.cancel}</div>
+                {/if}
                 <div class="button ok" on:click={confirmClick} on:keyup={confirmClick}>{modalData.confirm}</div>
             </div>
         </div>

@@ -2,19 +2,19 @@
     import { currentPage, user } from '../store/globalStore';
 
     
-    const pageName = 'Main'
+    const pageName = 'MainTeacher'
 
     localStorage.setItem('requestPage', pageName)
     
     if(!$user) {
-        currentPage.set('Preview')
+        goToPage('Preview')
     }
 
 </script>
 
 
 <div class="wrapper">
-    <h2>Добро пожаловать, {$user?.name}</h2>
+    <h2>Добро пожаловать, ученик {$user?.name}</h2>
     This is {pageName} Page
 </div>
 
@@ -24,5 +24,7 @@
         position: relative;
         height: 100%;
         width: 100%;
+        padding-top: 20px;
+        font-size: 2rem;
     }
 </style>

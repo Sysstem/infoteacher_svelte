@@ -10,8 +10,9 @@
   	import Header from "./components/main/Header.svelte";
   	import Login from "./pages/Login.svelte";
 	import Profile from "./pages/Profile.svelte";
-	import Main from "./pages/Main.svelte"
+	import MainTeacher from "./pages/MainTeacher.svelte"
 	import { user } from "./store/globalStore";
+  	import MainStudent from "./pages/MainStudent.svelte";
 
 
 	const pageNamesArray = $pageNames
@@ -50,7 +51,12 @@
 			{/if}
 			{#if currentPageName == pageNamesArray[0]}
 				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
-					<Main />
+					<MainTeacher />
+				</section>
+			{/if}
+			{#if currentPageName == pageNamesArray[7]}
+				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
+					<MainStudent />
 				</section>
 			{/if}
 			{#if currentPageName == pageNamesArray[2]}
@@ -106,6 +112,7 @@
 	.pageWrapperS {
 		position: absolute;
 		inset: 0;
-		overflow-y: auto
+		overflow-y: auto;
+		overflow-x: hidden;
 	}
 </style>

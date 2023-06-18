@@ -1,35 +1,87 @@
 <script>
 	import { each, onMount } from "svelte/internal";
 	import { fade } from "svelte/transition";
-	import { currentPage, pageNames, user, previousPage, goToPage } from "../../store/globalStore"
+	import { currentPage, pageNames, user, previousPage, goToPage, phoneNumber } from "../../store/globalStore"
+	import Modal from "./Modal.svelte";
 
 	export let logoElementTransform = 0;
 
 
 	const pageNamesArray = $pageNames;
 
-	let navItems = [
+	let navItemsForGuest = [
 			{
 				id: 1,
-				title: 'Главная',
+				title: 'Превью',
 				pageName: pageNamesArray[1],
 			},
 			{
 				id: 3,
 				title: 'О сервисе',
-				pageName: pageNamesArray[2],
+				pageName: pageNamesArray[2], //About
 			},
 			{
 				id: 2,
 				title: 'Цены',
-				pageName: pageNamesArray[3],
+				pageName: pageNamesArray[3], // Pricing
 			},
 			{
 				id: 4,
 				title: 'Контакты',
+				pageName: pageNamesArray[4], // Contacts
+			}
+		],
+		navItemsForTeacher = [
+			{
+				id: 1,
+				title: 'Главная',
+				pageName: pageNamesArray[0], // Main
+			},
+			{
+				id: 3,
+				title: '2',
+				pageName: pageNamesArray[2],
+			},
+			{
+				id: 2,
+				title: '3',
+				pageName: pageNamesArray[3],
+			},
+			{
+				id: 4,
+				title: '4',
 				pageName: pageNamesArray[4],
 			}
 		],
+		navItemsForStudent = [
+			{
+				id: 1,
+				title: 'Главная',
+				pageName: pageNamesArray[0],
+			},
+			{
+				id: 3,
+				title: '2ss',
+				pageName: pageNamesArray[2],
+			},
+			{
+				id: 2,
+				title: '3ss',
+				pageName: pageNamesArray[3],
+			},
+			{
+				id: 4,
+				title: '4ss',
+				pageName: pageNamesArray[4],
+			}
+		],
+		navItems = navItemsForGuest,
+		modalData = {
+			title: 'Телефон',
+			info: 'Наш телефон: ' + $phoneNumber,
+			confirm: 'OK'
+		},
+		isModalVisible = false,
 		logoPath = './assets/svg/Logo_dark.svg',
 		isNavOpen = false,
 		responsiveBorder = 700,
@@ -41,14 +93,24 @@
 
 	onMount(() => {
 		logoElement = document.querySelector('.logo')
-	})	
+	})
 
 	currentPage.subscribe(value => {
 		currentPageName = value
 	});
 
 	$: isNavListVisible = currentPageName != 'Login'
+	$: navItems = 
+		$user?.category == 'teacher'
+		? navItemsForTeacher
+		: $user?.category == 'student'
+		? navItemsForStudent
+		: navItemsForGuest;
+	
 		
+	function showConfirmModal() {
+		isModalVisible = !isModalVisible
+	}
 
 	function windowResize() {
 		mobileVersion = window.innerWidth < responsiveBorder;
@@ -93,7 +155,7 @@
 		if(currentPageName != 'Profile')
 			goToPage('Profile')
 		else
-			goToPage($previousPage || 'Main')
+			goToPage($previousPage || navItems[0].pageName)
 	}
 
 	function loginBtnClick() {
@@ -106,7 +168,7 @@
 	}
 
 	function onLogoClick() {
-		goToPage(!!$user ? 'Main' : 'Preview')
+		goToPage(navItems[0].pageName)
 	}
 
 	function onNavBurgerClick() {
@@ -162,12 +224,16 @@
 					<div class="navSidebarInfoBlock">
 						<img class="logoSvgNav" src={logoPath} alt="Logo">
 						<div class="linksBlock">
+							<a href="https://telegram.org" class="socialLink">
+								<img class="socialLinkSvg" src="./assets/svg/telegram.svg" alt="Telegram">
+							</a>
 							<a href="https://vk.com" class="socialLink">
 								<img class="socialLinkSvg" src="./assets/svg/vk.svg" alt="VK">
 							</a>
-							<a href="https://vk.com" class="socialLink">
+							<!-- svelte-ignore a11y-click-events-have-key-events -->
+							<div on:click={showConfirmModal} class="socialLink">
 								<img class="socialLinkSvg" src="./assets/svg/phone2.svg" alt="Phone">
-							</a>
+							</div>
 							
 						</div>
 					</div>
@@ -205,6 +271,13 @@
 
 	</div>
 </div>
+
+<Modal 
+    modalData={modalData}
+    visibilityChange={showConfirmModal}
+    visibility={isModalVisible}
+	on:modalconfirm
+/>
 
 
 <style>

@@ -1,7 +1,7 @@
 <script>
 
     import Button from "../components/main/Button.svelte";
-    import { currentPage, testUserT, testUserS, user } from "../store/globalStore";
+    import { currentPage, testUserT, testUserS, user, goToPage } from "../store/globalStore";
     import { onMount, onDestroy, createEventDispatcher } from "svelte/internal";
 
     const loginRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
@@ -28,14 +28,15 @@
         console.log('Login Success')
         //get Data from server
 
-        if(passwordValue >= 5) {
+        if(passwordValue.length >= 5) {
             user.set($testUserS)
             localStorage.setItem('testUser', JSON.stringify($testUserS))
+            goToPage('MainStudent')
         } else {
             user.set($testUserT)
             localStorage.setItem('testUser', JSON.stringify($testUserT))
+            goToPage('MainTeacher')
         }
-        currentPage.set('Main')
     }
 
     function loginAttempt() {

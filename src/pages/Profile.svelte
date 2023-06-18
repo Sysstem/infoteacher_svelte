@@ -1,12 +1,10 @@
 <script>
-    import Header from '../components/main/Header.svelte'
     import InfoRow from '../components/main/InfoRow.svelte';
     import ActionRow from '../components/main/ActionRow.svelte';
     import { currentPage, user, pageNames } from '../store/globalStore';
     import { onDestroy } from 'svelte/internal';
 
     
-    const pageName = 'Profile';
 
     let exit = false,
         confirmData = {
@@ -29,6 +27,19 @@
         }
     })
 
+    function transformCategory(category) {
+        switch(category) {
+            case 'teacher': 
+                return 'Учитель'
+            case 'student':
+                return 'Ученик'
+            case 'admin':
+                return 'Администратор'
+            default:
+                return 'Гость'
+        }
+    }
+
 </script>
 
 
@@ -44,9 +55,9 @@
         info={$user.email}
     />
     <InfoRow 
-        svg={'./assets/svg/profile_onecolor.svg'}
-        title={'Имя1234'}
-        info={$user.name + ' ' + $user.surname}
+        svg={'./assets/svg/hat.svg'}
+        title={'Тип профиля'}
+        info={transformCategory($user.category)}
     />
     <InfoRow 
         svg={'./assets/svg/at.svg'}
