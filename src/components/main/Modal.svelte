@@ -89,7 +89,7 @@
     }
     .title {
         font-size: 1.2rem;
-        font-weight: 700;
+        font-weight: bold;
     }
     .close {
         width: 20px;

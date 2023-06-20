@@ -175,7 +175,7 @@
     }
     .loginPageTitle {
         font-size: 4rem;
-        font-weight: 700;
+        font-weight: bold;
         margin: 15px;
         text-align: center;
     }

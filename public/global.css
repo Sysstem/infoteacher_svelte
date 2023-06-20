@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
 
 :root {
 	--green: #749020;
@@ -14,6 +13,16 @@
 	--dark: #3d3d3d;
 	--semidark: #5d5d5d;
 	--lightGray: #dddddd;
+}
+
+@font-face {
+	font-family: "Play";
+	font-weight: bold;
+	src: url("./assets/fonts/Play-Bold.ttf");
+}
+@font-face {
+	font-family: "Play";
+	src: url("./assets/fonts/Play-Regular.ttf");
 }
 
 * {
