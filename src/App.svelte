@@ -1,29 +1,26 @@
 <script>
-	import Preview from "./pages/Preview.svelte";
-	import About from "./pages/About.svelte";
-	import Pricing from "./pages/Pricing.svelte";
-	import Contacts from "./pages/Contacts.svelte";
+// Components
+  	import Header from "./components/main/Header.svelte";
+  	import Message from "./components/main/Message.svelte";
+
+// Svelte
 	import { fly, fade } from "svelte/transition";
 	import { onDestroy } from "svelte";
-	import { currentPage } from "./store/globalStore";
-	import { pageNames } from "./store/globalStore";
-  	import Header from "./components/main/Header.svelte";
-  	import Login from "./pages/Login.svelte";
-	import Profile from "./pages/Profile.svelte";
-	import MainTeacher from "./pages/MainTeacher.svelte"
-	import { user } from "./store/globalStore";
-  	import MainStudent from "./pages/MainStudent.svelte";
 
-
-	const pageNamesArray = $pageNames
+// Stores
+	import { user, currentPage } from "./store/globalStore";
+	import { routing } from "./store/routing"
 
 	let currentPageName = '',
 		testUser = localStorage.getItem('testUser'),
-		requestPage = localStorage.getItem('requestPage');
+		requestPage = localStorage.getItem('requestPage'),
+		pages = null;
 
 	if(testUser) {
 		user.set(JSON.parse(testUser))
-		if(!requestPage) requestPage = 'Main'
+		if(!requestPage) {
+			requestPage = $user?.category == 'teacher' ? 'MainTeacher' : $user?.category == 'student' ? 'MainStudent' : 'Preview'
+		}
 	} else {
 		if(!requestPage) requestPage = 'Preview'
 	}
@@ -34,6 +31,11 @@
 		currentPageName = value
 	});
 
+	const unsubscribeRouting = routing.subscribe(value => {
+		pages = value
+	});
+
+
 	onDestroy(() => {
 		unsubscribeCurrentPage()
 	})
@@ -42,48 +44,12 @@
 
 <main>
 	<div class="mainContainer">
+		<Message />
 		<Header />
 		<div class="pageWrapper">
-			{#if currentPageName == pageNamesArray[1]}
-				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
-					<Preview />
-				</section>
-			{/if}
-			{#if currentPageName == pageNamesArray[0]}
-				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
-					<MainTeacher />
-				</section>
-			{/if}
-			{#if currentPageName == pageNamesArray[7]}
-				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
-					<MainStudent />
-				</section>
-			{/if}
-			{#if currentPageName == pageNamesArray[2]}
-				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
-					<About />
-				</section>
-			{/if}
-			{#if currentPageName == pageNamesArray[3]}
-				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
-					<Pricing />
-				</section>
-			{/if}
-			{#if currentPageName == pageNamesArray[4]}
-				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
-					<Contacts />
-				</section>
-			{/if}
-			{#if currentPageName == pageNamesArray[5]}
-				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
-					<Login />
-				</section>
-			{/if}
-			{#if currentPageName == pageNamesArray[6]}
-				<section class="pageWrapperS" in:fly="{{delay: 350, y: 300, duration: 400}}" out:fade="{{duration: 400}}">
-					<Profile />
-				</section>
-			{/if}
+			<section class="pageWrapperS">
+				<svelte:component this={pages[currentPageName]} />
+			</section>
 		</div>
 	</div>
 </main>
@@ -112,7 +78,7 @@
 	.pageWrapperS {
 		position: absolute;
 		inset: 0;
-		overflow-y: auto;
+		overflow-y: hidden;
 		overflow-x: hidden;
 	}
 </style>

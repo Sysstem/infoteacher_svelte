@@ -1,7 +1,7 @@
 <script>
 	import { each, onMount } from "svelte/internal";
-	import { fade } from "svelte/transition";
-	import { currentPage, pageNames, user, previousPage, goToPage, phoneNumber } from "../../store/globalStore"
+	import { fade, fly } from "svelte/transition";
+	import { currentPage, pageNames, user, previousPage, goToPage, phoneNumber, headerMode, changeHeader } from "../../store/globalStore"
 	import Modal from "./Modal.svelte";
 
 	export let logoElementTransform = 0;
@@ -13,66 +13,66 @@
 			{
 				id: 1,
 				title: 'Превью',
-				pageName: pageNamesArray[1],
+				pageName: 'Preview',
 			},
 			{
 				id: 3,
 				title: 'О сервисе',
-				pageName: pageNamesArray[2], //About
+				pageName: 'About', //About
 			},
 			{
 				id: 2,
 				title: 'Цены',
-				pageName: pageNamesArray[3], // Pricing
+				pageName: 'Pricing', // Pricing
 			},
 			{
 				id: 4,
 				title: 'Контакты',
-				pageName: pageNamesArray[4], // Contacts
+				pageName: 'Contacts', // Contacts
 			}
 		],
 		navItemsForTeacher = [
 			{
 				id: 1,
 				title: 'Главная',
-				pageName: pageNamesArray[0], // Main
+				pageName: 'MainTeacher', // Main
 			},
 			{
 				id: 3,
-				title: '2',
-				pageName: pageNamesArray[2],
+				title: 'Уроки',
+				pageName: 'Lessons',
 			},
 			{
 				id: 2,
-				title: '3',
-				pageName: pageNamesArray[3],
+				title: 'Практика',
+				pageName: 'Practice',
 			},
 			{
 				id: 4,
-				title: '4',
-				pageName: pageNamesArray[4],
+				title: 'Материалы',
+				pageName: 'Materials',
 			}
 		],
 		navItemsForStudent = [
 			{
 				id: 1,
 				title: 'Главная',
-				pageName: pageNamesArray[0],
+				pageName: 'MainStudent',
 			},
 			{
 				id: 3,
 				title: '2ss',
-				pageName: pageNamesArray[2],
+				pageName: 'About',
 			},
 			{
 				id: 2,
 				title: '3ss',
-				pageName: pageNamesArray[3],
+				pageName: 'Pricing',
 			},
 			{
 				id: 4,
 				title: '4ss',
-				pageName: pageNamesArray[4],
+				pageName: 'Contacts',
 			}
 		],
 		navItems = navItemsForGuest,
@@ -89,7 +89,11 @@
 		navElement,
 		headerElement,
 		logoElement,
-		currentPageName = $currentPage;
+		currentPageName = $currentPage,
+		restoredInfo = {
+			headerMode: localStorage.getItem('headerMode'),
+			headerTitle: localStorage.getItem('headerTitle') || 'Заголовок'
+		};
 
 	onMount(() => {
 		logoElement = document.querySelector('.logo')
@@ -98,6 +102,16 @@
 	currentPage.subscribe(value => {
 		currentPageName = value
 	});
+
+	if(restoredInfo.headerMode) {
+		console.log(restoredInfo.headerMode)
+		$headerMode = {
+			activeMode: restoredInfo.headerMode,
+			title: restoredInfo.headerTitle
+
+		}
+	}
+
 
 	$: isNavListVisible = currentPageName != 'Login'
 	$: navItems = 
@@ -114,6 +128,7 @@
 
 	function windowResize() {
 		mobileVersion = window.innerWidth < responsiveBorder;
+
 		if (!isNavListVisible) {
 			const headerWidth = headerElement.clientWidth,
 				paddingOffset = parseFloat(window.getComputedStyle(headerElement).getPropertyValue('padding-left'));
@@ -193,83 +208,113 @@
 		}
 		isNavOpen = !isNavOpen
 	}
+
+	function onBackClick() {
+		
+	}
+	function onHomeClick() {
+		goToPage('Main')
+		changeHeader('menu')
+	}
 	
 	$: calculateLogoPos = currentPageName != 'Login' ? 0 : logoElementTransform;
 </script>
 
 
 <div class="wrapper">
-	<div class="header" bind:this={headerElement}>
-		<div class="logo" 
-			style="transform: translateX({calculateLogoPos}px)"
-			on:click={onLogoClick} 
-			on:keyup={onLogoClick}
+	{#if $headerMode.activeMode == 'menu'}
+		<div class="header" 
+			bind:this={headerElement} 
+			in:fly="{{delay: 400, y: -100, duration: 400}}" 
+			out:fly="{{y: -100, duration: 400}}"
 		>
-			<img class="logoSvg" src={logoPath} alt="Logo">
-		</div>
+			<div class="logo" 
+				style="transform: translateX({calculateLogoPos}px)"
+				on:click={onLogoClick} 
+				on:keyup={onLogoClick}
+			>
+				<img class="logoSvg" src={logoPath} alt="Logo">
+			</div>
 
-		{#if currentPageName != 'Login'}
-			<nav transition:fade class="nav" bind:this={navElement}>
-				<ul class="navList">
-					{#each navItems as item, index (item.id)}
-						<li class={'navItem ' + (item.pageName == currentPageName ? 'chosen' : '')} 
-							on:click={() => {goToPage(item.pageName); if(mobileVersion) onNavBurgerClick()}}
-							on:keyup={() => {goToPage(item.pageName); if(mobileVersion) onNavBurgerClick()}}
-						>
-							{item.title}
-						</li>
-					{/each}
-				</ul>
-				{#if mobileVersion}
-					<div class="navSidebarInfoBlock">
-						<img class="logoSvgNav" src={logoPath} alt="Logo">
-						<div class="linksBlock">
-							<a href="https://telegram.org" class="socialLink">
-								<img class="socialLinkSvg" src="./assets/svg/telegram.svg" alt="Telegram">
-							</a>
-							<a href="https://vk.com" class="socialLink">
-								<img class="socialLinkSvg" src="./assets/svg/vk.svg" alt="VK">
-							</a>
-							<!-- svelte-ignore a11y-click-events-have-key-events -->
-							<div on:click={showConfirmModal} class="socialLink">
-								<img class="socialLinkSvg" src="./assets/svg/phone2.svg" alt="Phone">
+			{#if currentPageName != 'Login'}
+				<nav transition:fade class="nav" bind:this={navElement}>
+					<ul class="navList">
+						{#each navItems as item, index (item.id)}
+							<li class={'navItem ' + (item.pageName == currentPageName ? 'chosen' : '')}
+								on:click={() => {goToPage(item.pageName); if(mobileVersion) onNavBurgerClick()}}
+								on:keyup={() => {goToPage(item.pageName); if(mobileVersion) onNavBurgerClick()}}
+							>
+								{item.title}
+							</li>
+						{/each}
+					</ul>
+					{#if mobileVersion}
+						<div class="navSidebarInfoBlock">
+							<img class="logoSvgNav" src={logoPath} alt="Logo">
+							<div class="linksBlock">
+								<a href="https://telegram.org" class="socialLink">
+									<img class="socialLinkSvg" src="./assets/svg/telegram.svg" alt="Telegram">
+								</a>
+								<a href="https://vk.com" class="socialLink">
+									<img class="socialLinkSvg" src="./assets/svg/vk.svg" alt="VK">
+								</a>
+								<!-- svelte-ignore a11y-click-events-have-key-events -->
+								<div on:click={showConfirmModal} class="socialLink">
+									<img class="socialLinkSvg" src="./assets/svg/phone2.svg" alt="Phone">
+								</div>
+								
 							</div>
-							
 						</div>
-					</div>
-				{/if}
-			</nav>
-		{/if}
-		{#if currentPageName != 'Login'}
-			<div transition:fade class="loginBtn {currentPageName == 'Profile' ? 'loginBtnProfile' : ''}" on:click={loginBtnClick} on:keyup={loginBtnClick}>
-				<svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<path class="path {currentPageName == 'Profile' ? 'loginBtnSvgProfile' : ''}" stroke="#292D32" opacity="0.4" d="M12.1605 10.87C12.0605 10.86 11.9405 10.86 11.8305 10.87C9.45055 10.79 7.56055 8.84 7.56055 6.44C7.56055 3.99 9.54055 2 12.0005 2C14.4505 2 16.4405 3.99 16.4405 6.44C16.4305 8.84 14.5405 10.79 12.1605 10.87Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-					<path class="path {currentPageName == 'Profile' ? 'loginBtnSvgProfile' : ''}" stroke="#292D32" d="M7.1607 14.56C4.7407 16.18 4.7407 18.82 7.1607 20.43C9.9107 22.27 14.4207 22.27 17.1707 20.43C19.5907 18.81 19.5907 16.17 17.1707 14.56C14.4307 12.73 9.9207 12.73 7.1607 14.56Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-				</svg>
-				{#if !mobileVersion}
-					{#if $user}
-						<p>Профиль</p>
-					{:else}
-						<p>Вход / <br>Регистрация</p>
-					{/if}	
-				
-				{/if}
-			</div>
-		{/if}
-		{#if currentPageName != 'Login'}
-			<div transition:fade class="showNavBtn" on:click={onNavBurgerClick} on:keyup={onNavBurgerClick}>
-				<!-- <img width="40" src="./assets/svg/burger.svg" alt="Burger"> -->
-				<svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<path id="firstLine" class="burgerLine" d="M5 7H15" stroke="#3d3d3d" stroke-width="2" stroke-linecap="round"/>
-					<path id="secondLine" class="burgerLine" d="M5 12H18" stroke="#3d3d3d" stroke-width="2" stroke-linecap="round"/>
-					<path id="thirdLine" class="burgerLine" d="M5 17H12" stroke="#3d3d3d" stroke-width="2" stroke-linecap="round"/>
-				</svg>
-			</div>
-		{/if}
-	</div>
-	<div class="bottomGrad">
-
-	</div>
+					{/if}
+				</nav>
+			{/if}
+			{#if currentPageName != 'Login'}
+				<div transition:fade class="loginBtn {currentPageName == 'Profile' ? 'loginBtnProfile' : ''}" on:click={loginBtnClick} on:keyup={loginBtnClick}>
+					<svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path class="path {currentPageName == 'Profile' ? 'loginBtnSvgProfile' : ''}" stroke="#292D32" opacity="0.4" d="M12.1605 10.87C12.0605 10.86 11.9405 10.86 11.8305 10.87C9.45055 10.79 7.56055 8.84 7.56055 6.44C7.56055 3.99 9.54055 2 12.0005 2C14.4505 2 16.4405 3.99 16.4405 6.44C16.4305 8.84 14.5405 10.79 12.1605 10.87Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+						<path class="path {currentPageName == 'Profile' ? 'loginBtnSvgProfile' : ''}" stroke="#292D32" d="M7.1607 14.56C4.7407 16.18 4.7407 18.82 7.1607 20.43C9.9107 22.27 14.4207 22.27 17.1707 20.43C19.5907 18.81 19.5907 16.17 17.1707 14.56C14.4307 12.73 9.9207 12.73 7.1607 14.56Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+					{#if !mobileVersion}
+						{#if $user}
+							<p>Профиль</p>
+						{:else}
+							<p>Вход / <br>Регистрация</p>
+						{/if}	
+					
+					{/if}
+				</div>
+			{/if}
+			{#if currentPageName != 'Login'}
+				<div transition:fade class="showNavBtn" on:click={onNavBurgerClick} on:keyup={onNavBurgerClick}>
+					<!-- <img width="40" src="./assets/svg/burger.svg" alt="Burger"> -->
+					<svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path id="firstLine" class="burgerLine" d="M5 7H15" stroke="#3d3d3d" stroke-width="2" stroke-linecap="round"/>
+						<path id="secondLine" class="burgerLine" d="M5 12H18" stroke="#3d3d3d" stroke-width="2" stroke-linecap="round"/>
+						<path id="thirdLine" class="burgerLine" d="M5 17H12" stroke="#3d3d3d" stroke-width="2" stroke-linecap="round"/>
+					</svg>
+				</div>
+			{/if}
+		</div>
+	
+	{:else if $headerMode.activeMode == 'nav' || $headerMode.activeMode == 'titledNav'}
+		<div class="header"
+			in:fly="{{delay: 400, y: -100, duration: 400}}" 
+			out:fly="{{y: -100, duration: 400}}"
+		>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<img class="back" on:click={onBackClick} src="./assets/svg/arrow_right.svg" alt="Back">
+			{#if $headerMode.title}
+				<p class="headerTitle">{$headerMode.title || 'InfoTeacher'}</p>
+			{:else}
+				<img class="logoSvg" src={logoPath} alt="Logo">
+			{/if}
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<img class="home" on:click={onHomeClick} src="./assets/svg/cross.svg" alt="Home">
+		</div>
+	{:else}
+		<p style="font-size: 2rem; color: var(--bad);">Ошибка отображения, очистите кэш</p>
+	{/if}
+	<div class="bottomGrad"></div>
 </div>
 
 <Modal 
@@ -283,9 +328,10 @@
 <style>
 
 	.wrapper {
+		--headerBgColor: #FFFFFF;
+		position: relative;
 		width: 100%;
 		z-index: 15;
-		position: relative;
 	}
 
 	.header {
@@ -298,13 +344,27 @@
 		z-index: 10;
 	}
 
+	.headerTitle {
+		font-size: 1.5rem;
+	}
+
+	.back {
+		height: 40px;
+		transform: rotate(180deg);
+		cursor: pointer;
+	}
+	.home {
+		height: 30px;
+		cursor: pointer;
+	}
+
 	.bottomGrad {
 		position: absolute;
 		bottom: -20px;
 		left: 0;
 		height: 20px;
 		width: 100%;
-		background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+		background: linear-gradient(180deg, var(--headerBgColor) 0%, rgba(255,255,255,0) 100%);
 
 		z-index: 5;
 	}

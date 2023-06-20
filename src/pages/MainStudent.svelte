@@ -1,5 +1,6 @@
 <script>
     import { currentPage, user } from '../store/globalStore';
+    import { fly, fade } from 'svelte/transition';
 
     
     const pageName = 'MainTeacher'
@@ -13,7 +14,7 @@
 </script>
 
 
-<div class="wrapper">
+<div in:fly="{{delay: 400, y: 300, duration: 400}}" out:fly="{{duration: 400, y: 400}}" class="wrapper">
     <h2>Добро пожаловать, ученик {$user?.name}</h2>
     This is {pageName} Page
 </div>

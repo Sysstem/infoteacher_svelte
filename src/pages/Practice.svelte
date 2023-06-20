@@ -1,20 +1,21 @@
 <script>
     import { fly, fade } from 'svelte/transition';
-    
-    const pageName = 'About'
 
+    
 
 </script>
 
 
 <div in:fly="{{delay: 400, y: 300, duration: 400}}" out:fly="{{duration: 400, y: 400}}" class="wrapper">
-    This is {pageName} Page
+    Practice
 </div>
 
 
 <style>
     .wrapper {
-        padding: 20px;
-        font-size: 2.5rem
+        position: relative;
+        height: 100%;
+        width: 100%;
+        padding-top: 40px;
     }
 </style>

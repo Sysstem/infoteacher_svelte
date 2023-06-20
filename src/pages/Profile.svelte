@@ -1,7 +1,8 @@
 <script>
+    import { fly, fade } from 'svelte/transition';
     import InfoRow from '../components/main/InfoRow.svelte';
     import ActionRow from '../components/main/ActionRow.svelte';
-    import { currentPage, user, pageNames } from '../store/globalStore';
+    import { currentPage, user } from '../store/globalStore';
     import { onDestroy } from 'svelte/internal';
 
     
@@ -43,7 +44,7 @@
 </script>
 
 
-<div>
+<div in:fly="{{delay: 400, y: 300, duration: 400}}" out:fly="{{duration: 400, y: 400}}" class="wrapper">
     <InfoRow 
         svg={'./assets/svg/profile_onecolor.svg'}
         title={'Имя'}
@@ -75,5 +76,10 @@
 
 
 <style>
-
+    .wrapper {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        padding-top: 20px;
+    }
 </style>

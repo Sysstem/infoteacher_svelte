@@ -1,8 +1,7 @@
 <script>
-
+    import { fly, fade } from 'svelte/transition';
     import Button from "../components/main/Button.svelte";
-    import { currentPage, testUserT, testUserS, user, goToPage } from "../store/globalStore";
-    import { onMount, onDestroy, createEventDispatcher } from "svelte/internal";
+    import { testUserT, testUserS, user, goToPage } from "../store/globalStore";
 
     const loginRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
         minPasswordLength = 3,
@@ -115,7 +114,7 @@
 </script>
 
 
-<div class="wrapper">
+<div in:fly="{{delay: 400, y: 300, duration: 400}}" out:fly="{{duration: 400, y: 400}}" class="wrapper">
     <p class="loginPageTitle">Вход</p>
     <form class="loginForm" on:submit={submitForm}>
         <div class="inputWrapper">

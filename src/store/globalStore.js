@@ -1,5 +1,6 @@
 
 import { writable, derived, readable, get } from 'svelte/store';
+import { routing } from './routing';
 
 /* 
 	Все названия страниц:
@@ -11,18 +12,11 @@ import { writable, derived, readable, get } from 'svelte/store';
 		Login: Вход
 */
 
-export const pageNames = readable([
-	'MainTeacher',
-	'Preview',
-	'About',
-	'Pricing',
-	'Contacts',
-	'Login',
-	'Profile',
-	'MainStudent',
-], set => {
-	
-})
+export const pageNames = readable(
+	Object.keys(get(routing)), 
+	set => {}
+)
+
 
 export const phoneNumber = writable('+7(925)477-55-11');
 
@@ -32,6 +26,7 @@ export const previousPage = writable("");
 export const goToPage = (target, noRestore = false) => {
 	if(!target) {
 		console.warn('Error: pageName is undefined')
+		errorMsg.set({type: 'error', title: 'Ошибка', text: 'Запрашиваемая страница не найдена'})
 		return
 	}
 
@@ -56,7 +51,17 @@ export const goToPage = (target, noRestore = false) => {
 		}
 	} else {
 		console.warn(`Error: ${target} is invalid pageName`)
+		errorMsg.set({type: 'error', title: 'Ошибка', text: `Страница "${target}" не найдена или доступ к ней запрещен`})
 	}
+}
+export const changeHeader = (mode, title = '') => {
+	headerMode.set({
+		activeMode: mode,
+		title: title,
+	})
+
+	localStorage.setItem('headerMode', mode)
+	localStorage.setItem('headerTitle', title)
 }
 
 export const user = writable(null);
@@ -74,4 +79,15 @@ export const testUserS = writable({
 	surname: 'Тестов',
 	category: 'student',
 });
+
+export const errorMsg = writable({title: '', text: ''})
+
+// headerMode - вариант отображения хэдера
+// menu - с пунктами меню
+// nav - с логотипом в центре и навигацией по краям
+// titledNav - с заголовком в центре и навигацией по краям
+export const headerMode = writable({
+	activeMode: 'menu',
+	title: '',
+})
 
