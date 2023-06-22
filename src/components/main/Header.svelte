@@ -1,7 +1,7 @@
 <script>
 	import { each, onMount } from "svelte/internal";
 	import { fade, fly } from "svelte/transition";
-	import { currentPage, pageNames, user, previousPage, goToPage, phoneNumber, headerMode, changeHeader } from "../../store/globalStore"
+	import { currentPage, pageNames, user, previousPage, goToPage, phoneNumber, headerMode, changeHeader, backHeader } from "../../store/globalStore"
 	import Modal from "./Modal.svelte";
 
 	export let logoElementTransform = 0;
@@ -136,7 +136,7 @@
 
 			return
 		}
-		if(!mobileVersion) {
+		if(!mobileVersion && $headerMode.activeMode == 'menu') {
 			navElement.style.left = '0'
 			isNavOpen = true
 		} else {
@@ -210,6 +210,11 @@
 	}
 
 	function onBackClick() {
+		if($backHeader) {
+			$backHeader()
+		} else {
+			onHomeClick()
+		}
 		
 	}
 	function onHomeClick() {
@@ -304,7 +309,7 @@
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<img class="back" on:click={onBackClick} src="./assets/svg/arrow_right.svg" alt="Back">
 			{#if $headerMode.title}
-				<p class="headerTitle">{$headerMode.title || 'InfoTeacher'}</p>
+				<p transition:fade class="headerTitle">{$headerMode.title || 'InfoTeacher'}</p>
 			{:else}
 				<img class="logoSvg" src={logoPath} alt="Logo">
 			{/if}
@@ -346,6 +351,8 @@
 
 	.headerTitle {
 		font-size: 1.5rem;
+		max-width: 700px;
+		text-align: center;
 	}
 
 	.back {

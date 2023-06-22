@@ -4,6 +4,7 @@
 
 
     export let svg = ''
+    export let number = 0
     export let title = 'Заголовок'
     export let color = 'var(--dark)'
     export let confirmData = null
@@ -35,6 +36,8 @@
             <div class="svgWrapper">
                 <img class="svg" src={svg} alt="svg">
             </div>
+        {:else if number}
+            <p class="number">{number}</p>
         {/if}
         <div class="data">
             <p style="font-size: 1.1rem; color: {color}">{title}</p>
@@ -71,6 +74,12 @@
 
         cursor: pointer;
     }
+    .number {
+        display: block;
+        min-width: 25px;
+        font-size: 25px;
+        font-weight: bold;
+    }
     .svgWrapper {
         width: var(--svgWidth);
         height: var(--svgWidth);
@@ -86,7 +95,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        height: 65px;
+        min-height: 65px;
         gap: 5px;
         padding: 15px 20px 15px 0;
     }

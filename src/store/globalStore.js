@@ -54,15 +54,18 @@ export const goToPage = (target, noRestore = false) => {
 		errorMsg.set({type: 'error', title: 'Ошибка', text: `Страница "${target}" не найдена или доступ к ней запрещен`})
 	}
 }
-export const changeHeader = (mode, title = '') => {
+export const changeHeader = (mode = 'menu', title = '', noRestore = false) => {
 	headerMode.set({
 		activeMode: mode,
 		title: title,
 	})
 
-	localStorage.setItem('headerMode', mode)
-	localStorage.setItem('headerTitle', title)
+	if(!noRestore) {
+		localStorage.setItem('headerMode', mode)
+		localStorage.setItem('headerTitle', title)
+	}
 }
+export const backHeader = writable(null)
 
 export const user = writable(null);
 export const testUserT = writable({

@@ -32,7 +32,7 @@
             <div class="cardSvgBlock">
                 <img class="cardSvg" src="./assets/svg/books.svg" alt="">
             </div>
-            <p class="navText">Материалы</p>
+            <p class="navText">База знаний (словарь)</p>
         </div>
     </div>
 </div>
@@ -49,7 +49,7 @@
     }
     .title {
         font-size: 3rem;
-        padding: 20px;
+        padding: 0 20px 20px 20px;
     }
     .subtitle {
         font-size: 2rem;

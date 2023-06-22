@@ -13,6 +13,7 @@ import MainStudent from "../pages/MainStudent.svelte";
 import Lessons from "../pages/Lessons.svelte";
 import Practice from "../pages/Practice.svelte";
 import Materials from "../pages/Materials.svelte";
+import Lesson from "../pages/Lesson.svelte";
 
 export const routing = readable({
     Preview: Preview,
@@ -26,6 +27,7 @@ export const routing = readable({
     Lessons: Lessons,
     Practice: Practice,
     Materials: Materials,
+    Lesson: Lesson,
 }, set => {
 	
 })
