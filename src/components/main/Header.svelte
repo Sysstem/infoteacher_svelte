@@ -49,7 +49,7 @@
 			},
 			{
 				id: 4,
-				title: 'Материалы',
+				title: 'База знаний',
 				pageName: 'Materials',
 			}
 		],

@@ -3,7 +3,7 @@
 	import ActionRow from '../components/main/ActionRow.svelte';
 	import { backHeader, errorMsg, goToPage, changeHeader } from '../store/globalStore';
 	import { gradesData, lessonsList, lessonsData, definitions } from '../store/gradesAndLessons'
-	import InfoRow from '../components/main/InfoRow.svelte';
+	import InfoRow_v2 from '../components/main/InfoRow_v2.svelte';
 
 	export let lessonData = null;
 	export let backFunction = () => {};
@@ -91,7 +91,7 @@
 	<div class="defsWrap">
 		{#each lessonData.definitions as def}
             {#if definitions[def]}
-                <InfoRow
+                <InfoRow_v2
                     title={definitions[def].title}
                     info={definitions[def].def}
                 />
