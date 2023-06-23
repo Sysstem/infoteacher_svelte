@@ -32,6 +32,14 @@
 		backHeader.set(backToLessonNav)
 	}
 
+	function goToPractice() {
+		goToPage('Practice')
+		changeHeader('menu', '')
+		backHeader.set(() => {
+			goToPage('Main')
+		})
+	}
+
 </script>
 
 <div in:fly="{{delay: 400, y: 300, duration: 400}}" out:fly="{{duration: 400, y: 400}}" class="wrapperoutside">
@@ -55,7 +63,7 @@
 				</div>
 			</a>
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div class="nav Practice" on:click={() => goToPage('Practice')}>
+			<div class="nav Practice" on:click={() => goToPractice()}>
 				<div class="cardSvgBlock">
 					<img class="cardSvg" src="./assets/svg/puzzle4.svg" alt="">
 				</div>
@@ -133,6 +141,7 @@
 		font-size: 1.45rem;
 		text-indent: 1.5em;
 		max-width: 850px;
+		text-align: justify;
 	}
 	.lessonWrap {
 		display: flex;

@@ -16,7 +16,7 @@
     <div transition:fly="{{y: -200, duration: 400}}" class="wrapper">
         <div class="msgBlock">
             <div class="titleBlock">
-                <div class="title" style={message.type == 'error' ? 'color: var(--bad)' : 'color: var(--dark)'}>{message.title || 'Внимание'}</div>
+                <div class="title" style={message.type == 'error' ? 'color: var(--bad)' : message.type == 'good' ? 'color: var(--good)' : 'color: var(--dark)'}>{message.title || 'Внимание'}</div>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <img class="close" on:click={closeThis} src="./assets/svg/cross.svg" alt="Close">
             </div>

@@ -60,11 +60,6 @@
         title={'Тип профиля'}
         info={transformCategory($user.category)}
     />
-    <InfoRow 
-        svg={'./assets/svg/at.svg'}
-        title={'E-mail'}
-        info={$user.email}
-    />
     <ActionRow 
         svg={'./assets/svg/exit.svg'}
         title={'Выход'}

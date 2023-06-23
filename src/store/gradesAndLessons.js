@@ -191,6 +191,15 @@ export const lessonsData = [
     }
 ];
 
+export const practiceList = [
+    {
+        name: 'Собери компьютер',
+        pageName: 'ComputerScheme',
+        info: 'В данном упражнении предлагается собрать компьютер из различных деталей (комплектующих)',
+        svg: './assets/svg/computer-memory.svg'
+    }
+]
+
 export const definitions = {
     information: {
         title: 'Информация',
