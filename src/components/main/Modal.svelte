@@ -11,13 +11,12 @@
         confirm: 'OK',
         cancel: 'Отмена'
     }
-    export let visibilityChange = null
     export let visibility = null
 
     const dispatch = createEventDispatcher();
 
     function closeThis() {
-        visibilityChange()
+        visibility = false
     }
     function cancelClick() {
         console.log('cancel')

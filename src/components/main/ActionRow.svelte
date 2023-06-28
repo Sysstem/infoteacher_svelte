@@ -14,14 +14,9 @@
 
     let isModalVisible = false
 
-
-    function showConfirmModal() {
-        isModalVisible = !isModalVisible
-    }
-
     function rowClickHandle() {
         if(confirmData) {
-            showConfirmModal()
+            isModalVisible = true
         } else {
             onClick()
         }
@@ -50,8 +45,7 @@
 
 <Modal 
     modalData={confirmData}
-    visibilityChange={showConfirmModal}
-    visibility={isModalVisible}
+    bind:visibility={isModalVisible}
     on:modalconfirm
 />
 
