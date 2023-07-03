@@ -33,7 +33,7 @@
             case 'teacher': 
                 return 'Учитель'
             case 'student':
-                return 'Ученик'
+                return 'Обучающийся'
             case 'admin':
                 return 'Администратор'
             default:
@@ -60,6 +60,14 @@
         title={'Тип профиля'}
         info={transformCategory($user.category)}
     />
+    {#if $user.class}
+        <InfoRow 
+            svg={'./assets/svg/personal_card.svg'}
+            title={'Класс'}
+            info={$user.class}
+        />
+    {/if}
+    
     <ActionRow 
         svg={'./assets/svg/exit.svg'}
         title={'Выход'}

@@ -1,12 +1,22 @@
 <script>
     import { fly, fade } from 'svelte/transition';
-    import { definitions } from '../store/gradesAndLessons';
-    import InfoRow_v2 from '../components/main/InfoRow_v2.svelte';
+    import { definitions, practiceList } from '../store/gradesAndLessons';
+    import ActionRow from '../components/main/ActionRow.svelte';
+    import { backHeader, changeHeader, goToPage, user } from '../store/globalStore';
 
     let searchValue = '',
-        sortedDefs = Object.values(definitions).sort((a, b) => a.title > b.title ? 1 : -1)
+        practiceListForStudent = practiceList.filter(el => $user.exercises.indexOf(el.pageName) != -1);
     
-    
+
+    function goToPractice(practice) {
+        changeHeader('titledNav', practice.name)
+        backHeader.set(() => {
+            goToPage('Practice')
+            changeHeader('menu', '')
+        })
+        goToPage(practice.pageName)
+    }
+
 
 </script>
 
@@ -20,11 +30,12 @@
     </div>
     
     <div class="results">
-        {#each sortedDefs as def}
-            {#if def.title.toLowerCase().indexOf(searchValue.toLowerCase()) != -1}
-                <InfoRow_v2
-                    title={def.title}
-                    info={def.def}
+        {#each practiceListForStudent as practice}
+            {#if practice.name.toLowerCase().indexOf(searchValue.toLowerCase()) != -1}
+                <ActionRow
+                    title={practice.name}
+                    svg={practice.svg}
+                    onClick={() => {goToPractice(practice)}}
                 />
             {/if}
         {/each}

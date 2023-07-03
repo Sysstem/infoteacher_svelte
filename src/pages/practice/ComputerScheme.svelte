@@ -202,18 +202,6 @@
 		originalY = '',
 		taskBg;
 
-	function handleDragEnter(e) {
-		status = "You are dragging over the " + e
-			.target
-			.getAttribute('id');
-	}
-
-	function handleDragLeave(e) {
-		status = "You left the " + e
-			.target
-			.getAttribute('id');
-	}
-
 	function handleDragDrop(e) {
 		e.preventDefault();
 		var element_id = e
@@ -265,15 +253,6 @@
 		.setData("text", e.target.getAttribute('id'));
 	}
 
-	function handleDragEnd(e) {
-		if (dropped_in == false) {
-		status = "You let the " + e
-			.target
-		.getAttribute('id') + " go.";
-		}
-	dropped_in = false;
-	}
-
 	$: if(
 		dropped.includes('motherboard') 
 		&& dropped.includes('cpu') 
@@ -291,7 +270,8 @@
 
 <div in:fly="{{delay: 400, y: 300, duration: 400}}" out:fly="{{duration: 400, y: 400}}" class="wrapper">
 	<p class="taskText">
-		Задача: из данных комплектующих собрать упрощенную модель компьютера, изученную на уроке (подсказка: среди даных компонентов могут быть лишние)
+		Задача: из данных комплектующих собрать упрощенную модель компьютера, изученную на уроке (подсказка: среди даных компонентов могут быть лишние).
+		<!-- Можешь сказать, чего не хватает в системном блоке для того, чтобы компьютер заработал? -->
 	</p>
 	<div class="grid">
 		<div class="componentsBlock">
@@ -310,7 +290,6 @@
 
 							draggable=true 
 							on:dragstart={handleDragStart}
-							on:dragend={handleDragEnd}
 						>
 					{/if}
 					
@@ -321,8 +300,6 @@
 			<p class="titleText">Сборка</p>
 			<div class="configurate">
 				<div class="computerBlock"
-					on:dragenter={handleDragEnter} 
-					on:dragleave={handleDragLeave}  
 					on:drop={handleDragDrop} 
 					bind:this={drop_zone}
 					id="drop_zone" 

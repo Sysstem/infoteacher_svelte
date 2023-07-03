@@ -15,6 +15,7 @@ import Practice from "../pages/Practice.svelte";
 import Materials from "../pages/Materials.svelte";
 import Lesson from "../pages/Lesson.svelte";
 import ComputerScheme from "../pages/practice/ComputerScheme.svelte"
+import PracticeForStudent from "../pages/PracticeForStudent.svelte"
 
 export const routing = readable({
     Preview: Preview,
@@ -30,6 +31,7 @@ export const routing = readable({
     Materials: Materials,
     Lesson: Lesson,
     ComputerScheme: ComputerScheme,
+    PracticeForStudent: PracticeForStudent,
 }, set => {
 	
 })

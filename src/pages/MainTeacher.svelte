@@ -32,7 +32,7 @@
             <div class="cardSvgBlock">
                 <img class="cardSvg" src="./assets/svg/books.svg" alt="">
             </div>
-            <p class="navText">База знаний (словарь)</p>
+            <p class="navText">Справочник</p>
         </div>
     </div>
 </div>
@@ -60,10 +60,10 @@
         width: 85%;
         max-width: 800px;
         margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(2, minmax(200px, 1fr));
+        display: flex;
+        justify-content: center;
         gap: 5%;
-
+        flex-wrap: wrap;
         padding: 20px;
     }
     .cardSvgBlock {
@@ -79,6 +79,8 @@
     .nav {
         border-radius: 20px;
         font-size: 1.5rem;
+        max-width: 300px;
+        margin-bottom: 5%;
         aspect-ratio: 1/1;
         display: flex;
         flex-direction: column;

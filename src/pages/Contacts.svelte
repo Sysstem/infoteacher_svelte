@@ -12,7 +12,7 @@
             Наше представительство находится по адресу: Московская обл. г. Коломна, ул. Ленина, д. 67А
         </p>
         <div class="contactSvgWrapper">
-            <img class="contactSvg svgRight" src="./assets/svg/location-pin.svg" alt="Location">
+            <img class="contactSvg svgRight" src="./assets/svg/location_pin.svg" alt="Location">
         </div>
     </div>
     <div class="infoBlock">

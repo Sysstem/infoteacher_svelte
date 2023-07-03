@@ -81,6 +81,9 @@ export const testUserS = writable({
 	name: 'Тест',
 	surname: 'Тестов',
 	category: 'student',
+	class: '7А',
+	classCode: '7a2023',
+	exercises: ['ComputerScheme']
 });
 
 export const errorMsg = writable({title: '', text: ''})

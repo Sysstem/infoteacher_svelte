@@ -64,8 +64,9 @@
     .info {
         font-size: 1.1rem;
         color: var(--semidark);
-        line-height: 15px;
+        line-height: 18px;
         padding: 10px 10px 0 10px;
+        text-align: justify;
     }
     .line {
         position: absolute;

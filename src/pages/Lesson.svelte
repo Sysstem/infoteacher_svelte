@@ -1,7 +1,7 @@
 <script>
 	import { fly } from 'svelte/transition';
 	import ActionRow from '../components/main/ActionRow.svelte';
-	import { backHeader, errorMsg, goToPage, changeHeader } from '../store/globalStore';
+	import { backHeader, errorMsg, goToPage, changeHeader, user } from '../store/globalStore';
 	import { gradesData, lessonsList, lessonsData, definitions } from '../store/gradesAndLessons'
 	import InfoRow_v2 from '../components/main/InfoRow_v2.svelte';
 
@@ -53,22 +53,25 @@
 				</div>
 				<p class="navText">Материал урока</p>
 			</div>
-			<a href="./assets/files/computer.pptx">
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<div class="nav Materials" on:click={() => {$errorMsg = {title: 'Загрузка презентации', text: 'Презентация загружается на ваш компьютер.'}}}>
-					<div class="cardSvgBlock">
-						<img class="cardSvg" src="./assets/svg/presentation_dwnl.svg" alt="">
+			{#if $user.category == 'teacher'}
+				<a href="{lessonData.presentation}">
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<div class="nav Materials" on:click={() => {$errorMsg = {title: 'Загрузка презентации', text: 'Презентация загружается на ваш компьютер.'}}}>
+						<div class="cardSvgBlock">
+							<img class="cardSvg" src="./assets/svg/presentation_dwnl.svg" alt="">
+						</div>
+						<p class="navText">Скачать презентацию</p>
 					</div>
-					<p class="navText">Скачать презентацию</p>
+				</a>
+			
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<div class="nav Practice" on:click={() => goToPractice()}>
+					<div class="cardSvgBlock">
+						<img class="cardSvg" src="./assets/svg/puzzle4.svg" alt="">
+					</div>
+					<p class="navText">Практика</p>
 				</div>
-			</a>
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div class="nav Practice" on:click={() => goToPractice()}>
-				<div class="cardSvgBlock">
-					<img class="cardSvg" src="./assets/svg/puzzle4.svg" alt="">
-				</div>
-				<p class="navText">Практика</p>
-			</div>
+			{/if}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<div class="nav Practice" on:click={() => showDefs()}>
 				<div class="cardSvgBlock">

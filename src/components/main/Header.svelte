@@ -49,7 +49,7 @@
 			},
 			{
 				id: 4,
-				title: 'База знаний',
+				title: 'Справочник',
 				pageName: 'Materials',
 			}
 		],
@@ -61,18 +61,18 @@
 			},
 			{
 				id: 3,
-				title: '2ss',
-				pageName: 'About',
+				title: 'Уроки',
+				pageName: 'Lessons',
 			},
 			{
 				id: 2,
-				title: '3ss',
-				pageName: 'Pricing',
+				title: 'Практика',
+				pageName: 'PracticeForStudent',
 			},
 			{
 				id: 4,
-				title: '4ss',
-				pageName: 'Contacts',
+				title: 'Справочник',
+				pageName: 'Materials',
 			}
 		],
 		navItems = navItemsForGuest,
@@ -324,7 +324,6 @@
 
 <Modal 
     modalData={modalData}
-    visibilityChange={showConfirmModal}
     visibility={isModalVisible}
 	on:modalconfirm
 />
